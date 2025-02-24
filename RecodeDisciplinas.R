@@ -7,7 +7,8 @@ p <- as.data.frame(read_excel("OcupacionesI.xlsx", sheet="Ocupaciones"))
 p <- p[!is.na(p$categoría),] # Evita NA
 cates <- names(table(p$categoría))
 changes <-list()
-M$Ocupación <- tolower(M$occupation)i
+M$Ocupación <- tolower(M$occupation)
+M$disc <- ""
 for(i in cates[c(3, 2, 4, 6, 5, 1, 8, 7)]){
   changes[[i]]  <- p[p$categoría==i, "ocupación"]
   for(j in 1:nrow(M)) {
@@ -17,3 +18,4 @@ for(i in cates[c(3, 2, 4, 6, 5, 1, 8, 7)]){
 }
 M$disciplina <- sub("^\\|","", M$disc)
 if(exists("base")) base$Disciplina <- M$disciplina
+M$disciplina
