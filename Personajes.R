@@ -40,6 +40,15 @@ base$ventana <- get_template2(base, title="label", title2="description", text="l
   load("Autores.RData")
 }
 
-autores <- exhibit(base, name="label", ntext="ventana", image="image", main = "Autores del impresionismo",
+f_A <- c("entity", "label", "description", "sex", "byear", "bcountry", "dyear", "dcountry", "occupation", "bplaceLat", "bplaceLon", "pic",  "wikipedias")
+f_E <- c("Q", "Nombre", "Descripción", "Sexo", "Nace", "País nace", "Muere", "País fallece", "Ocupación", "lat", "lon", "imagen", "wiki")
+
+campos <- c(f_E[1:9], "image", "ventana")
+
+indexes <- match(f_A, names(base))
+names(base)[indexes] <- f_E
+source("RecodeDisciplinas.R")
+
+autores <- exhibit(base[,campos], name="Nombre", ntext="ventana", image="image", main = "Autores del impresionismo",
                    language = "es") %>% plot(dir="~/temp")
 
