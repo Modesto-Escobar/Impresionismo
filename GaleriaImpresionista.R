@@ -34,14 +34,7 @@ library(readxl)
 base <- read_excel("prueba.xlsx")
 baseO <- read_excel("obras.xlsx")
 
-base <- base %>% 
-  mutate(
-    description=ifelse(is.na(descripción), description, descripción),
-    description=paste0(toupper(substr(description, 1, 1)), substr(description, 2, nchar(description))),
-    image=ifelse(pic=="NA" | pic=="", "imgs/pintor.jpg", paste0("imgs/", entity, ".jpg"))) %>%
-  select(label, descripción, description, occupation, wikipedias, wiki, image) %>% 
-  rename(nombre = label, ocupación = occupation) %>% 
-  as.data.frame() 
+baseO$Nombre_esp <- ifelse(is.na(baseO$Nombre_esp), baseO$Nombre_VO, baseO$Nombre_esp)
 
 # library(rvest)
 # library(polite)
@@ -58,18 +51,57 @@ base <- base %>%
 
 # base <- gsub("\\|?", "", base$occupation)
 
+base <- base %>% 
+  mutate(
+    description=ifelse(is.na(descripción), description, descripción),
+    description=paste0(toupper(substr(description, 1, 1)), substr(description, 2, nchar(description))),
+    image=ifelse(pic=="NA" | pic=="", "imgs/pintor.jpg", paste0("imgs/", entity, ".jpg"))) %>%
+  select(label, descripción, description, occupation, wikipedias, wiki, image) %>% 
+  rename(nombre = label, ocupación = occupation) %>% 
+  as.data.frame() 
+
+
+
 base$description <- gsub("\\s*\\(.*?\\)", "", base$description)
 
 base$wikipedias <- sub("es\\.wiki", "es.m.wiki", base$wikipedias)
 base$Wiki <- ifelse(base$wikipedias=="NA", NA, base$wikipedias)
 base$text <- ifelse(is.na(base$Wiki), "", paste0(base$wiki, renderLinks(base, "Wiki", target="mainframe", sites=sites)))
-base$ventana <- get_template2(base, title="nombre", title2 = "description", text="text")
 
+
+#Recodificación de ocupaciones
+M <- base
+p <- as.data.frame(read_excel("OcupacionesI.xlsx", sheet="Ocupaciones"))
+p <- p[!is.na(p$categoría),] # Evita NA
+cates <- names(table(p$categoría))
+changes <-list()
+M$Ocupación <- tolower(M$ocupación)
+M$disc <- ""
+for(i in cates[c(3, 2, 4, 6, 5, 1, 8, 7)]){
+  changes[[i]]  <- p[p$categoría==i, "ocupación"]
+  for(j in 1:nrow(M)) {
+    x <- unlist(strsplit(M$Ocupación[j],"\\|"))
+    if(length(intersect(x, changes[[i]]))>0) M$disc[j] <- paste0(M$disc[j], "|", i)
+  }
+}
+
+M$disciplina <- sub("^\\|","", M$disc)
+if(exists("base")) base$Disciplina <- M$disciplina
+
+
+base$ventana <- get_template2(base, title="nombre", title2 = "description", text="text")
 
 autores <- exhibit(base, name="nombre", ntext="ventana", image="image", main = "Autores del impresionismo",
                    language = "es") %>% plot(dir="~/temp")
 
+baseO$vetana_obras <- get_template2(baseO, title = "Nombre_esp", title2 = "Nombre_VO")
 
-# obras <- exhibit(baseO, name="Nombre_esp")
+# obras <- exhibit(baseO, name="Nombre_esp") %>% plot(dir="~/temp2")
 # 
 # multigraphCreate("Autores" = autores, "Obras" = obras) %>% plot(dir="~/temp2")
+
+
+
+
+
+
