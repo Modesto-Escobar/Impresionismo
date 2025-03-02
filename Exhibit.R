@@ -38,5 +38,5 @@ obra <- obras_mod |>
 
 netExhibit(tabla, tableformat=TRUE, initialType = "Autor", nodes=list(Autor=autor, Titulos=obra), 
            image="image", ntext="ventana",
-           main="Mujer x Mujer", colorScheme=1) |> plot("~/tmp")
+           main="Impresionismo", colorScheme=1) |> plot("~/tmp")
 
