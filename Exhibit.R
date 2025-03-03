@@ -1,5 +1,6 @@
 library(readxl)
 library(tidyverse)
+library(netCoin)
 
 load("Autores.RData")
 obras <- read_excel("obras.xlsx")
@@ -37,6 +38,6 @@ obra <- obras_mod |>
 
 
 netExhibit(tabla, tableformat=TRUE, initialType = "Autor", nodes=list(Autor=autor, Titulos=obra), 
-           image="image", ntext="ventana",
+           image="image", ntext="ventana", tableButton=TRUE,
            main="Impresionismo", colorScheme=1) |> plot("~/tmp")
 
