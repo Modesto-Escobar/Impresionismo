@@ -1,5 +1,6 @@
 library(readxl)
 library(tidyverse)
+library(netCoin)
 
 load("Autores.RData")
 obras <- read_excel("obras.xlsx")
@@ -38,5 +39,5 @@ obra <- obras_mod |>
 names(autor)[1] <- names(obra)[1] <- "Elemento"
 netExhibit(tabla, name="Elemento", tableformat=TRUE, initialType = "Autor", nodes=list(Autor=autor, Titulos=obra), 
            image="image", ntext="ventana", tableButton=TRUE, language="es",
-           main="Impresionismo", colorScheme=1) |> plot("~/tmp")
+           main="Impresionismo", colorScheme=1) |> plot("~/Galerias/Impresionismo")
 
