@@ -5,31 +5,29 @@ library(wikiTools)
 
 obras <- read_excel("obrasQ.xlsx")
 
-obras$image <- gsub(" ","_", obras$image)
-obras$image <- paste0("https://commons.wikimedia.org/wiki/Special:FilePath/", obras$image)
+obras <- obras %>%
+  mutate(
+    image = ifelse(!is.na(image),
+                   paste0("https://commons.wikimedia.org/wiki/Special:FilePath/", gsub(" ", "_", image)),
+                   image),
+    nombre_reconciliado = coalesce(nombre_reconciliado, Nombre_esp),
+    Nombre_esp = coalesce(Nombre_esp, nombre_reconciliado)) %>%
+  filter(!is.na(Autor))  
 
-obras <- obras %>% 
-  filter(!obrasQ == "NA") %>% 
-  select(nombre_VO, image)
+if (!dir.exists("img_recon")) {
+  dir.create("img_recon")
+} else {
+  cat("\033[33mLa carpeta 'img_recon' ya existe.\033[0m\n")
+}
 
-input <- data.frame(name=obras$obrasQ, url=obras$image)
-getFiles(input, path="img_recon", ext="jpg")
+# input <- data.frame(name=obras$obrasQ, url=obras$image)
+# getFiles(input, path="img_recon", ext="jpg")
 
-duplicados <- obras %>% 
-  filter(Autor != "NA")
 
-obras_sin_reconciliar <- duplicados %>% 
-  filter(obrasQ != "NA" & image=="https://commons.wikimedia.org/wiki/Special:FilePath/NA")
-
-obras_sin_Q <- duplicados %>%
-  filter(is.na(obrasQ)) %>%
-  select(Autor, autorQ, obrasQ, nombre_VO) %>%
-  group_by(Autor) %>%  # Agrupar por autor
-  mutate(obrasQ = paste0(autorQ, "-",sprintf("%02d", row_number()))) %>%  # Asignar número secuencial con 2 dígitos
+obras_sin_Q <- obras %>% 
+  filter(is.na(obrasQ) & is.na(image)) %>% 
+  group_by(Autor) %>% 
+  mutate(obrasQ = paste0(autorQ, "-",sprintf("%02d", row_number()))) %>%  
   ungroup() %>% 
   arrange(nombre_VO)
-
-write_xlsx(obras_sep, "obras_separadas.xlsx")
-
-
 
