@@ -22,6 +22,8 @@ if (!dir.exists("img_recon")) {
 
 # input <- data.frame(name=obras$obrasQ, url=obras$image)
 # getFiles(input, path="img_recon", ext="jpg")
+# git rm --cached .Rhistory
+# git commit -m "Ignore .Rhistory"
 
 
 obras_sin_Q <- obras %>% 
