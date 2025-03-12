@@ -37,6 +37,7 @@ obras_sin_Q <- obras %>%
 obras <- obras |>
   mutate(image=if_else(is.na(image), "img_recon/impresionista.jpg",
                        paste0("img_recon/", obrasQ, ".jpg"))) |>
+  filter(!is.na(obrasQ)) |> 
   bind_rows(obras_sin_Q) |>
   mutate(fecha_inicio = str_extract(Fecha, "^[0-9]{4}"),
     Fecha= str_extract(sub("\\.0","",Fecha), "[0-9]{4}$"),
