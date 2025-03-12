@@ -12,7 +12,7 @@ obras <- obras %>%
                    image),
     nombre_reconciliado = coalesce(nombre_reconciliado, Nombre_esp),
     Nombre_esp = coalesce(Nombre_esp, nombre_reconciliado)) %>%
-  filter(!is.na(Autor))  
+    drop_na(Autor, Fecha)  
 
 if (!dir.exists("img_recon")) {
   dir.create("img_recon")
@@ -29,7 +29,18 @@ if (!dir.exists("img_recon")) {
 obras_sin_Q <- obras %>% 
   filter(is.na(obrasQ) & is.na(image)) %>% 
   group_by(Autor) %>% 
-  mutate(obrasQ = paste0(autorQ, "-",sprintf("%02d", row_number()))) %>%  
+  mutate(obrasQ = paste0(autorQ, "-",sprintf("%02d", row_number())),
+         image = "img_recon/impresionista.jpg") %>%
   ungroup() %>% 
   arrange(nombre_VO)
 
+obras <- obras |>
+  mutate(image=if_else(is.na(image), "img_recon/impresionista.jpg",
+                       paste0("img_recon/", obrasQ, ".jpg"))) |>
+  bind_rows(obras_sin_Q) |>
+  mutate(fecha_inicio = str_extract(Fecha, "^[0-9]{4}"),
+    Fecha= str_extract(sub("\\.0","",Fecha), "[0-9]{4}$"),
+    Titulo = paste0(nombre_reconciliado, " (", Fecha,")")) |> 
+  select(Titulo, Autor, Fecha, Formato, Museo, Lugar, image) |>
+  distinct(Titulo, .keep_all = TRUE) |> 
+  arrange(Fecha)
