@@ -30,7 +30,7 @@ obras_sin_Q <- obras %>%
   filter(is.na(obrasQ) & is.na(image)) %>% 
   group_by(Autor) %>% 
   mutate(obrasQ = paste0(autorQ, "-",sprintf("%02d", row_number())),
-         image = "img_recon/impresionista.jpg") %>%
+         image = paste0("img_recon/", obrasQ, ".jpg")) %>%
   ungroup() %>% 
   arrange(nombre_VO)
 
