@@ -18,7 +18,7 @@ obrasQ <- obrasQ %>%
 if (!dir.exists("img_recon")) {
   dir.create("img_recon")
 } else {
-  cat("\033[33mLa carpeta 'img_recon' ya existe.\033[0m\n")
+  # cat("\033[33mLa carpeta 'img_recon' ya existe.\033[0m\n")
 }
 
 # input <- data.frame(name=obras$obrasQ, url=obras$image)
