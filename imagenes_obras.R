@@ -18,7 +18,7 @@ obrasQ <- obrasQ %>%
 if (!dir.exists("img_recon")) {
   dir.create("img_recon")
 } else {
-  cat("\033[33mLa carpeta 'img_recon' ya existe.\033[0m\n")
+  # cat("\033[33mLa carpeta 'img_recon' ya existe.\033[0m\n")
 }
 
 # input <- data.frame(name=obras$obrasQ, url=obras$image)
@@ -42,7 +42,7 @@ obras <- obrasQ |>
   bind_rows(obras_sin_Q) |>
   mutate(fecha_inicio = str_extract(Fecha, "^[0-9]{4}"),
     Fecha= str_extract(sub("\\.0","",Fecha), "[0-9]{4}$"),
-    Titulo = paste0(nombre_reconciliado, " (", Fecha,")"),
+    Titulo = paste0(nombre_VO, " (", Fecha,")"),
     obrasR = sub(".*-\\d+", "", obrasQ)) |> 
   select(Titulo, Autor, Fecha, Formato, Museo, Lugar, image, obrasR) |>
   distinct(Titulo, .keep_all = TRUE) |> 
