@@ -46,7 +46,7 @@ obras <- obrasQ |>
     obrasR = sub(".*-\\d+", "", obrasQ)) |> 
   select(Titulo, Autor, Fecha, Formato, Museo, Lugar, image, obrasR) |>
   distinct(Titulo, .keep_all = TRUE) |> 
-  arrange(Fecha) |>
   pop_up(title="Titulo", entity="obrasR") |>
+  arrange(Fecha) |>
   select(-obrasR)
 
