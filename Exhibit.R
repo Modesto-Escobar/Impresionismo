@@ -39,7 +39,5 @@ names(autor)[1] <- names(obras)[1] <- "Elemento"
 # Ejecución de la página
 netExhibit(tabla, name="Elemento", tableformat=TRUE, initialType = "Autor", nodes=list(Autor=autor, Titulos=obras), 
            image="image", ntext="pop_up", tableButton=TRUE, language="es",
-           main="Impresionismo", colorScheme=1) |> plot("~/temp")
-  # plot("~/Galerias/Impresionismo")
-
-
+           main="Impresionismo", colorScheme=1) |> 
+  plot("~/Galerias/Impresionismo")
