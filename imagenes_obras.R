@@ -12,7 +12,8 @@ obrasQ <- obrasQ %>%
                    paste0("https://commons.wikimedia.org/wiki/Special:FilePath/", gsub(" ", "_", image)),
                    image),
     nombre_reconciliado = coalesce(nombre_reconciliado, Nombre_esp),
-    Nombre_esp = coalesce(Nombre_esp, nombre_reconciliado)) %>%
+    Nombre_esp = coalesce(Nombre_esp, nombre_reconciliado),
+    nombre_VO = coalesce(nombre_VO, Nombre_esp)) %>%
     drop_na(Autor, Fecha)  
 
 if (!dir.exists("img_recon")) {
