@@ -2,6 +2,8 @@ library(readxl)
 library(tidyverse)
 library(netCoin)
 
+if(FALSE){
+
 # Carga de logos del pie
 imageLink <- function(image, px=30, py=px) {
   link <- paste0('<img style="height:', py, 'px;width:', px,';vertical-align:bottom;margin-right:5px;" src="https://sociocav.usal.es/me/pics/', image, '.png"/>')
@@ -30,14 +32,18 @@ tabla <- union %>%
   drop_na(Titulos) 
 
 # Preparativos finales
-autor <- base |> 
-  select(campos) |> 
+autor <- base |>
+  left_join(Wikis, join_by(Q == entity)) |> 
+  select(campos, langs) |> 
   rename(pop_up=ventana)
 
-names(autor)[1] <- names(obras)[1] <- "Elemento"
+names(tabla) <- c("Pintores", "Pinturas")
+} else {
+  load("impresionismo.RData")
+}
 
 # Ejecución de la página
-netExhibit(tabla, name="Elemento", tableformat=TRUE, initialType = "Autor", nodes=list(Autor=autor, Titulos=obras), 
-           image="image", ntext="pop_up", tableButton=TRUE, language="es",
+netExhibit(tabla, tableformat=TRUE, initialType = "Autor", nodes=list(Pintores=autor, Pinturas=obras), 
+           image="image", ntext="pop_up", tableButton=TRUE, language="es", export=TRUE,
            main="Impresionismo", colorScheme=1) |> 
   plot("~/Galerias/Impresionismo")
