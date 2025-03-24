@@ -43,7 +43,8 @@ names(tabla) <- c("Pintores", "Pinturas")
 }
 
 # Ejecución de la página
-netExhibit(tabla, tableformat=TRUE, initialType = "Autor", nodes=list(Pintores=autor, Pinturas=obras), 
+netExhibit(tabla, tableformat=TRUE, initialType = "Pintores", nodes=list(Pintores=autor, Pinturas=obras), 
            image="image", ntext="pop_up", tableButton=TRUE, language="es", export=TRUE,
            main="Impresionismo", colorScheme=1) |> 
   plot("~/Galerias/Impresionismo")
+
