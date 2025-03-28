@@ -32,10 +32,13 @@ tabla <- union %>%
   drop_na(Titulos) 
 
 # Preparativos finales
+source("nolangs.R")
+Wikis <- w_Wikipedias(base$Q, wikilangs="es|ca|eu|gl|ast|en|fr|pt|it|de")
 autor <- base |>
-  left_join(Wikis, join_by(Q == entity)) |> 
-  select(campos, langs) |> 
-  rename(pop_up=ventana)
+  left_join(Wikis, join_by(Q == entity)) |>
+  mutate(sin_Wiki=nolangs(langs, "es|ca|eu|gl|ast|en|fr|pt|it|de")) |> 
+  select(campos, langs, sin_Wiki) |>
+  rename(pop_up=ventana, Wikis=langs)
 
 names(tabla) <- c("Pintores", "Pinturas")
 } else {
@@ -45,6 +48,7 @@ names(tabla) <- c("Pintores", "Pinturas")
 # Ejecución de la página
 netExhibit(tabla, tableformat=TRUE, initialType = "Pintores", nodes=list(Pintores=autor, Pinturas=obras), 
            image="image", ntext="pop_up", tableButton=TRUE, language="es", export=TRUE,
-           main="Impresionismo", colorScheme=1) |> 
+           main="Impresionismo", colorScheme=0,
+           note =paste0("<p style=font-size:20px; bottom:0; position:absolute><center>", imageLink("MicinEurPRb"), 
+                        "Fuente: Walter, Ingo F. (2022) Impresionismo. 1860-1920. Köln: TASCHEN ", imageLink("LogosXFs"),"</center></p>")) |> 
   plot("~/Galerias/Impresionismo")
-
