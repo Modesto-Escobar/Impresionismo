@@ -28,11 +28,12 @@ base$info <- ifelse(is.na(base$wikipedias),"",extractWiki(sub("Paul-Albert", "Al
 
 # input <- data.frame(name=base$entity, url=gsub("\\|.*","", base$pic))
 # getFiles(input, path="imgs", ext="jpg")
+Qs <- sub("\\.jpg", "", list.files("imgs", "Q.*\\.jpg"))
 
 base$description <- paste0(toupper(substr(base$description, 1, 1)), substr(base$description, 2, nchar(base$description)))
 base$wikidata <- paste0("https://m.wikidata.org/wiki/",base$entity)
 base$wiki <- sub("\\.wikipedia",".m.wikipedia", base$wikipedias)
-base$image <- ifelse(is.na(base$pic), "imgs/pintor.jpg", paste0("imgs/", base$entity, ".jpg"))
+base$image <- ifelse(base$entity %in% Qs, paste0("imgs/", base$entity, ".jpg"), "imgs/pintor.jpg")
 base$links <- paste0(base$info, 
                      '</p><h3>ENLACES:</h3>', renderLinks(base, c("wikidata", "wiki"), NULL, "mainframe", sites=sites))
 base$ventana <- get_template2(base, title="label", title2="description", text="links")
@@ -44,12 +45,13 @@ indexes <- match(f_A, names(base))
 names(base)[indexes] <- f_E
 
 source("RecodeDisciplinas.R")
+
+# save(base, file="Autores.RData)
 } else{
   load("Autores.RData")
 }
 
 campos <- c("Nombre", "Descripción", "Sexo", "Nace", "País nace", "Muere", "País fallece", "Ocupación", "image", "ventana")
 
-
-autores <- exhibit(base[,campos], name="Nombre", ntext="ventana", image="image", main = "Autores del impresionismo",
+exhibit(base[,campos], name="Nombre", ntext="ventana", image="image", main = "Autores del impresionismo",
                    language = "es") %>% plot(dir="~/temp")

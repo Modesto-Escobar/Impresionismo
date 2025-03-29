@@ -36,9 +36,9 @@ source("nolangs.R")
 Wikis <- w_Wikipedias(base$Q, wikilangs="es|ca|eu|gl|ast|en|fr|pt|it|de")
 autor <- base |>
   left_join(Wikis, join_by(Q == entity)) |>
-  mutate(sin_Wiki=nolangs(langs, "es|ca|eu|gl|ast|en|fr|pt|it|de")) |> 
-  select(campos, langs, sin_Wiki) |>
-  rename(pop_up=ventana, Wikis=langs)
+  mutate(`Sin Wikipedia`=nolangs(langs, "es|ca|eu|gl|ast|en|fr|pt|it|de")) |> 
+  select(all_of(campos), langs, `Sin Wikipedia`) |>
+  rename(pop_up=ventana, Wikipedias=langs)
 
 names(tabla) <- c("Pintores", "Pinturas")
 } else {

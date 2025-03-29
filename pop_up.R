@@ -35,7 +35,7 @@ pop_up <- function(data, title="name", title2=NULL, info=TRUE, entity="entity", 
         wikis$info <- sub("character\\(0\\)", "", as.character(extractWiki(names,language=langs)))
       }
       data <- merge(data, wikis, by.x=entity, by.y="entity", all.x=TRUE)
-      data$wiki <- ifelse(is.na(data$pages) | data$pages=="", NA, data$pages)
+      data$wiki <- ifelse(is.na(data$pages) | data$pages=="", NA, sub("\\|.*","",data$pages))
       data$info <- ifelse(is.na(data$info), "", data$info)
       data$pages <- wikis <- names <- NULL
     }

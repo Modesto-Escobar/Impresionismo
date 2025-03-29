@@ -4,6 +4,7 @@ library(writexl)
 library(wikiTools)
 
 source("pop_up.R")
+source("nolangs.R")
 obrasT <- read_excel("obrasQ.xlsx")
 
 obrasQ <- obrasT %>%
@@ -17,7 +18,8 @@ obrasQ <- obrasT %>%
     drop_na(Autor, Fecha) |> 
     filter(!is.na(obrasQ))
 
-obrasQ <- w_Wikipedias(obrasQ$obrasQ, wikilangs="es|ca|eu|gl|ast|en|fr|pt|it|de") |> 
+obrasQ <- w_Wikipedias(obrasQ$obrasQ, wikilangs="es|ca|eu|gl|ast|en|fr|pt|it|de") |>
+  mutate(pages=sub("\\|.*","", pages)) |> 
   right_join(obrasQ, join_by(entity==obrasQ)) |> 
   mutate(sin_Wiki=nolangs(langs, "es|ca|eu|gl|ast|en|fr|pt|it|de"))
 
@@ -49,9 +51,11 @@ obras <- obrasQ |>
   mutate(fecha_inicio = str_extract(Fecha, "^[0-9]{4}"),
     Fecha= str_extract(sub("\\.0","",Fecha), "[0-9]{4}$"),
     Titulo = paste0(nombre_VO, " (", Fecha,")"),
-    obrasR = sub(".*-\\d+", "", entity)) |> 
+    obrasR = sub(".*-\\d+", "", entity),
+    Formato =  paste0(toupper(substr(Formato, 1, 1)), substr(Formato, 2, nchar(Formato))),
+    Museo   =  paste0(toupper(substr(Museo, 1, 1)), substr(Museo, 2, nchar(Museo)))) |> 
   select(Titulo, Autor, Fecha, Formato, Museo, Lugar, image, obrasR, langs, sin_Wiki) |>
-  rename(Wikis=langs) |> 
+  rename(Wikipedias=langs, `Sin Wikipedia`=sin_Wiki) |> 
   distinct(Titulo, .keep_all = TRUE) |> 
   pop_up(title="Titulo", entity="obrasR", wikilangs = "es|en|fr|pt|it|de") |>
   arrange(Fecha) |>
