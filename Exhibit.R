@@ -2,7 +2,7 @@ library(readxl)
 library(tidyverse)
 library(netCoin)
 
-if(FALSE){
+if(TRUE){
 
 # Carga de logos del pie
 imageLink <- function(image, px=30, py=px) {
@@ -35,6 +35,7 @@ tabla <- union %>%
 source("nolangs.R")
 Wikis <- w_Wikipedias(base$Q, wikilangs="es|ca|eu|gl|ast|en|fr|pt|it|de")
 autor <- base |>
+  select(-wiki) |> 
   left_join(Wikis, join_by(Q == entity)) |>
   mutate(`Sin Wikipedia`=nolangs(langs, "es|ca|eu|gl|ast|en|fr|pt|it|de")) |> 
   select(all_of(campos), langs, `Sin Wikipedia`) |>
