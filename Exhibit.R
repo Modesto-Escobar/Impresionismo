@@ -2,7 +2,7 @@ library(readxl)
 library(tidyverse)
 library(netCoin)
 
-if(TRUE){
+if(FALSE){
 
 # Carga de logos del pie
 imageLink <- function(image, px=30, py=px) {
