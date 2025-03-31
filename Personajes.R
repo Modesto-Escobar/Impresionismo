@@ -21,7 +21,9 @@ sites <- data.frame(
 
 names <- readLines("nombres")
 
-baseQ <- getWikiInf(names)
+baseQ <- getWikiInf(names) |> 
+  mutate(Q = sub("Q1000579", "Q701504", Q))
+
 
 base <- w_EntityInfo(baseQ$Q, langsorder="es", wikilangs="es")
 base$info <- ifelse(is.na(base$wikipedias),"",extractWiki(sub("Paul-Albert", "Albert", base$label),language="es"))
